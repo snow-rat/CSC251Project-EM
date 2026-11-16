@@ -1,10 +1,13 @@
 public class Policy
 {
+// calculates bmi using height and weight
 public double bmiCalc(double polHeight, double polWeight, double bmi){
    bmi = (polWeight * 703) / (polHeight * polHeight);
    System.out.format("%.2f", bmi);
    return bmi;
     }
+    
+// calculates additional fees for old age, smoking, and high bmi
 public double feeCalc(double polAge, int polSmoke, double bmi, double feeTotal){
    double baseFee = 600;
    double ageFee;
