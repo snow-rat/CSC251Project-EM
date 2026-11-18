@@ -1,68 +1,80 @@
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 public class Project_Emily_McDonough
 {
-	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		
+	public static void main(String[] args) throws FileNotFoundException {		
 		String provName = "PLACEHOLDER";
 		String polNameFirst;
 		String polNameLast;
-		
-		int polNumber;
-		int polSmoke;
-		
-		double polHeight;
-		double polWeight;
+		String polSmoke = "PLACEHOLDER";
+		String polNumber;
+      String blank = " ";
       
-      double polAge;
+		double polAge = 0;
+		double polHeight = 0;
+      double polWeight = 0;
       double bmi = 0;
       double feeTotal = 0;
-		
-// due to time constraints, i've implemented the smoking check as an integer instead of a string. i'll probably fix that later on
-		
-		Policy insr = new Policy();
-		
-		System.out.println("Please enter the Policy Number: ");
-		polNumber = scan.nextInt();
       
-		System.out.println("Please enter the Provider Name: ");
-// also due to time constraints (i was very busy this week) i could not work out this bug where it just skips letting you enter this part
-      provName = scan.nextLine();
+      int smokeNo = 0;
+      int smokelessNo = 0;
       
-      System.out.println("Please enter the Policyholder's First Name: ");
-      polNameFirst = scan.nextLine();
+      File polsrc = new File("PolicyInformation.txt");
+      Scanner reader = new Scanner(polsrc);
       
-      System.out.println("Please enter the Policyholder's Last Name: ");
-      polNameLast = scan.nextLine();
+      ArrayList<Policy> data = new ArrayList<Policy>();
       
-      System.out.println("Please enter the Policyholder's Age: ");
-      polAge = scan.nextDouble();
+//end of variables
       
-      System.out.println("Please enter 0 if the Policyholder is a non-smoker, or 1 if the Policyholder is a smoker: ");
-      polSmoke = scan.nextInt();
+      while(reader.hasNext()) {
+		   polNumber = reader.nextLine();
+         provName = reader.nextLine();
+         polNameFirst = reader.nextLine();
+         polNameLast = reader.nextLine();
+         
+         blank = reader.nextLine();
+         polAge = Double.parseDouble(blank);
+         
+         polSmoke = reader.nextLine();
+         
+         blank = reader.nextLine();
+         polHeight = Double.parseDouble(blank);
+         
+         blank = reader.nextLine();
+         polWeight = Double.parseDouble(blank);
+         
+         if(reader.hasNext()) {
+            reader.nextLine();
+         }
+         
+         Policy pol = new Policy (polNumber, provName, polNameFirst, polNameLast, polAge, polSmoke, polHeight, polWeight);
+         data.add(pol);
+      }
       
-      System.out.println("Please enter the Policyholder's Height (in inches): ");
-      polHeight = scan.nextDouble();
+      reader.close();
       
-      System.out.println("Please enter the Policyholder's Weight (in pounds): ");
-      polWeight = scan.nextDouble();
+      for(int i =0; i < data.size(); i++) {
+         System.out.println("Policy Number: " + data.get(i).getPolNumber());
+         System.out.println("Provider Name: " + data.get(i).getProvName());
+         System.out.println("Policyholder's First Name: " + data.get(i).getPolNameFirst());
+         System.out.println("Policyholder's Last Name: " + data.get(i).getPolNameLast());
+         System.out.println("Policyholder's Age: " + data.get(i).getPolAge());
+         System.out.println("Policyholder's Smoking Status: " + data.get(i).getPolSmoke());
+         if (polSmoke.equalsIgnoreCase("non-smoker")) {
+            smokelessNo +=1;
+         }
+         else {
+            smokeNo +=1;
+         }
+         System.out.println("Policyholder's Height: " + data.get(i).getPolHeight());
+         System.out.println("Policyholder's Weight: " + data.get(i).getPolWeight());
+         System.out.println("Policyholder's BMI: " + data.get(i).bmiCalc(polHeight, polWeight, bmi));
+         System.out.println("Policy Price: " + data.get(i).feeCalc(polAge, polSmoke, bmi, feeTotal));
+      }
       
-      bmi = insr.bmiCalc(polHeight, polWeight, bmi);
-      
-      feeTotal = insr.feeCalc(polAge, polSmoke, bmi, feeTotal);
-      
-      System.out.println("Policy Number: " + polNumber);
-      System.out.println("Provider Name: " + provName);
-      System.out.println("Policyholder's First Name: " + polNameFirst);
-      System.out.println("Policyholder's Last Name: " + polNameLast);
-      System.out.println("Policyholder's Age: " + polAge);
-      
-      System.out.println("Policyholder's Smoking Status: " + polSmoke);
-      System.out.println("Policyholder's Height: " + polHeight);
-      System.out.println("Policyholder's Weight: " + polWeight);
-      System.out.println("Policyholder's BMI: " + bmi );
-      System.out.println("Policy Price: " + feeTotal);
-      
+      System.out.println("The number of policies with a smoker is " + smokeNo);
+      System.out.println("The number of policies with a non-smoker is " + smokelessNo); 
+// currently the smoker count and the displays for BMI and price are bugged. yet another thing i need to work on next time because i'm tired
 	}
 }
